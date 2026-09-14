@@ -1,49 +1,80 @@
 import Link from 'next/link';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
-import { kits } from '@/lib/catalog';
+import { kits, formats, money } from '@/lib/catalog';
 import { StreetNav } from '@/components/shop';
 export default function Home() {
   return (
     <main id="contenu-principal">
-      <section className="neighborhood wrap">
-        <div className="neighborhood-heading">
-          <div>
-            <p className="eyebrow">BIENVENUE AU PETIT BONHEUR</p>
-            <h1>
-              Aujourd’hui,
-              <br />
-              on ouvre <em>quoi ?</em>
-            </h1>
+      <section className="shop-window wrap" aria-labelledby="shop-title">
+        <div className="shop-window-copy">
+          <p className="eyebrow">KITS DE JEUX DE RÔLE POUR ENFANTS</p>
+          <h1 id="shop-title">
+            Tout pour jouer
+            <br />
+            <em>comme les grands.</em>
+          </h1>
+          <p className="shop-explanation">
+            Ouvrir un restaurant, accueillir les voyageurs d’un hôtel, organiser
+            un spa : nos kits transforment un coin de salon ou de classe en
+            terrain de jeu.
+          </p>
+          <p className="shop-contents">
+            Menus, billets, réservations, affiches…
+            <br />
+            Les supports sont dans le kit. L’histoire est à eux.
+          </p>
+          <div
+            className="shop-formats"
+            aria-label="Les deux formats disponibles"
+          >
+            <div>
+              <span>PDF à imprimer</span>
+              <strong>{money(formats.pdf.price)}</strong>
+            </div>
+            <div>
+              <span>Imprimé & plastifié</span>
+              <strong>{money(formats.printed.price)}</strong>
+            </div>
           </div>
-          <div className="neighborhood-intro">
-            <p>
-              Le restaurant du salon.
-              <br />
-              L’hôtel des doudous.
-              <br />
-              Le spa du mercredi.
-            </p>
-            <p>
-              Des décors à imprimer, des rôles à essayer.
-              <br />
-              La suite, c’est eux qui l’inventent.
-            </p>
-            <a href="#les-kits" className="text-link">
-              Les kits, à partir de 5 € <ArrowRight size={17} />
-            </a>
-          </div>
+          <p className="shop-guide-note">
+            Guide de préparation et idées de jeu inclus.
+          </p>
+          <a href="#les-kits" className="button">
+            Choisir un kit <ArrowRight size={18} />
+          </a>
         </div>
-        <StreetNav />
-        <div className="street-caption">
-          <span>CHOISISSEZ UNE PORTE. L’HISTOIRE COMMENCE.</span>
-          <span>À la maison · En classe · En atelier</span>
+        <div className="shop-window-products">
+          <div className="product-contact-sheet">
+            {kits.slice(0, 3).map((kit, index) => (
+              <Link
+                href={`/kits/${kit.id}`}
+                className={`window-kit ${index === 0 ? 'window-kit-featured' : ''}`}
+                key={kit.id}
+              >
+                <img
+                  src={kit.image}
+                  alt={`Kit ${kit.name} : ses affiches, cartes et supports de jeu`}
+                  width={1145}
+                  height={1374}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                />
+                <span>
+                  <span>{kit.name}</span>
+                  <ArrowUpRight size={17} />
+                </span>
+              </Link>
+            ))}
+          </div>
+          <p className="window-caption">
+            Les supports de nos kits, mis en scène. Accessoires non inclus.
+          </p>
         </div>
       </section>
       <section className="catalog wrap section" id="les-kits">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">DERRIÈRE CHAQUE PORTE, UN KIT</p>
-            <h2>De quoi faire comme les grands.</h2>
+            <p className="eyebrow">CHOISIR LEUR PROCHAIN JEU</p>
+            <h2>Les kits, en détail.</h2>
           </div>
           <p className="catalog-intro">
             Menus, réservations, petits billets…
@@ -176,6 +207,16 @@ export default function Home() {
             </p>
           </article>
         </div>
+      </section>
+      <section
+        className="neighborhood-directory wrap"
+        aria-label="Explorer les univers de jeu"
+      >
+        <div>
+          <p className="eyebrow">LE PETIT QUARTIER DES JEUX</p>
+          <h2>Une autre histoire à essayer ?</h2>
+        </div>
+        <StreetNav />
       </section>
       <aside className="next-addresses">
         <div className="wrap">
