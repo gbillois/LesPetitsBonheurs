@@ -17,6 +17,35 @@ npx tsc --noEmit
 npm test
 ```
 
+## Hébergement
+
+Le site n’est pas un dossier de fichiers HTML : les pages sont rendues à la demande par React Server Components, et la navigation interne (`next/link`) demande au serveur une charge utile RSC. Il n'y a donc pas d’`index.html` à publier, et GitHub Pages, qui ne sert que des fichiers statiques, ne peut pas faire tourner ce site. `npm run build` produit un Worker Cloudflare (`dist/server`) et ses fichiers d’accompagnement (`dist/client`).
+
+### Publier sur Cloudflare Workers
+
+```sh
+npx wrangler login
+npm run deploy
+```
+
+`npm run deploy` reconstruit le site puis le publie ; l’adresse `https://au-petit-bonheur.<sous-domaine>.workers.dev` est affichée à la fin. Le nom du Worker vient du champ `name` de `package.json`. Un domaine personnalisé s’ajoute dans le tableau de bord Cloudflare, sur le Worker, onglet Settings puis Domains & Routes.
+
+Pour vérifier le rendu de production avant publication :
+
+```sh
+npm run build
+npm start
+```
+
+### Publication automatique
+
+`.github/workflows/deploy.yml` rejoue les vérifications puis publie à chaque `push` sur `main`. Deux secrets sont à créer dans le dépôt (Settings, Secrets and variables, Actions) :
+
+- `CLOUDFLARE_API_TOKEN` : jeton créé sur https://dash.cloudflare.com/profile/api-tokens avec le modèle « Edit Cloudflare Workers ».
+- `CLOUDFLARE_ACCOUNT_ID` : identifiant de compte visible dans le tableau de bord Cloudflare.
+
+Si GitHub Pages est encore activé sur ce dépôt, le désactiver (Settings, Pages, Source : None) pour ne pas laisser en ligne une page vide.
+
 ## Organisation
 
 - `lib/catalog.ts` : contenu des kits et tarifs, seule source de vérité du catalogue.
