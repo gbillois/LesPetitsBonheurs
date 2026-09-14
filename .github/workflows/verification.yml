@@ -1,0 +1,26 @@
+# GitHub Pages publie directement les fichiers de la branche main : il n’y a
+# rien à déployer ici. Ce workflow vérifie seulement que les règles du panier
+# tiennent et que les pages HTML publiées correspondent bien au catalogue.
+name: Vérification du site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Le site n’a aucune dépendance : pas d’installation nécessaire.
+      - run: npm test
